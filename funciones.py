@@ -18,6 +18,12 @@ def leer_archivo(input_file_path):
     
     return W
 
+def medir_tiempo_ejecucion(W, p):
+    start_time = time.time()
+    calcularRanking(W, p)
+    end_time = time.time()
+    return end_time - start_time
+
 def dibujarGrafo(W, print_ejes=False):
     
     options = {
@@ -126,4 +132,4 @@ def obtenerMaximoRankingScore(M, p):
 W = leer_archivo('tests/test_dosestrellas.txt')
 
 #dibujarGrafo(W)
-print(calcularRanking(W, 0.5))
+#print(calcularRanking(W, 0.5))
