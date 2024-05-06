@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 import scipy.linalg as la
+import time
 
 
 def leer_archivo(input_file_path):
@@ -56,10 +57,13 @@ def calcularRanking(W, p):
             D[i][i] = 0
         else:
             D[i][i] = 1/np.sum(W[i])
-    #print(D)
+    print(D)
+    print(p*(W@D))
 
     #armo la matriz M
     M = np.eye(npages) - p*(W@D)
+
+    print(M)
 
     #calculo L y U
     L, U = factorizarLU(M)
@@ -133,3 +137,10 @@ W = leer_archivo('tests/test_dosestrellas.txt')
 
 #dibujarGrafo(W)
 #print(calcularRanking(W, 0.5))
+
+W = np.array([  [0, 0, 1, 0],
+                [0, 0, 0, 1],
+                [1, 0, 0, 0],
+                [0, 1, 0, 0]])
+
+print(obtenerMaximoRankingScore(W, 0.9))
