@@ -21,9 +21,9 @@ def leer_archivo(input_file_path):
 
 def medir_tiempo_ejecucion(W, p):
     start_time = time.time()
-    calcularRanking(W, p)
+    rnk, scr = calcularRanking(W, p)
     end_time = time.time()
-    return end_time - start_time
+    return scr, end_time - start_time
 
 def dibujarGrafo(W, print_ejes=False):
     
@@ -57,13 +57,8 @@ def calcularRanking(W, p):
             D[i][i] = 0
         else:
             D[i][i] = 1/np.sum(W[i])
-    print(D)
-    print(p*(W@D))
-
     #armo la matriz M
     M = np.eye(npages) - p*(W@D)
-
-    print(M)
 
     #calculo L y U
     L, U = factorizarLU(M)
@@ -132,15 +127,34 @@ def obtenerMaximoRankingScore(M, p):
     
     return output
 
+def obtenerMinimoRankingScore(M, p):
+    output = np.inf
+    # calculo el ranking y los scores
+    rnk, scr = calcularRanking(M, p)
+    output = np.min(scr)
+    
+    return output
 
-W = leer_archivo('tests/test_dosestrellas.txt')
 
-#dibujarGrafo(W)
-#print(calcularRanking(W, 0.5))
-
-W = np.array([  [0, 0, 1, 0],
-                [0, 0, 0, 1],
-                [1, 0, 0, 0],
-                [0, 1, 0, 0]])
-
-print(obtenerMaximoRankingScore(W, 0.9))
+def analizarGrafo(archivo, p):
+    # leo el archivo
+    W = leer_archivo(archivo)
+    #medir cantidad de conexiones
+    num_connections = np.sum(W)
+    #medir cantidad de nodos
+    num_nodes = W.shape[0]
+    max_score = -np.inf
+    min_score = np.inf
+    # calculo el tiempo de ejecución
+    ranking, tiempo_ejecucion = medir_tiempo_ejecucion(W, p)
+    # calculo el score máximo
+    max_score = np.max(ranking)
+    # calculo el score mínimo
+    min_score = np.min(ranking)
+    # obtengo el índice del nodo con el score máximo
+    max_index = np.argmax(ranking)+1
+    # obtengo el índice del nodo con el score mínimo
+    min_index = np.argmin(ranking)+1
+    
+    
+    return W, max_score, min_score, tiempo_ejecucion, num_connections, num_nodes, max_index, min_index
