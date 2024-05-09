@@ -158,3 +158,9 @@ def analizarGrafo(archivo, p):
     
     
     return W, max_score, min_score, tiempo_ejecucion, num_connections, num_nodes, max_index, min_index
+
+
+def matriz_condicion(p, W, D):
+    I = np.eye(W.shape[0])
+    M = I - p * np.dot(W, D)
+    return np.linalg.cond(M)
